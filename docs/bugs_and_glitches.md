@@ -42,7 +42,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Experience underflow for level 1 Pokémon with Medium-Slow growth rate](#experience-underflow-for-level-1-pok%C3%A9mon-with-medium-slow-growth-rate)
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
   - ["Smart" AI encourages Mean Look if its own Pokémon is badly poisoned](#smart-ai-encourages-mean-look-if-its-own-pok%C3%A9mon-is-badly-poisoned)
-  - ["Smart" AI discourages Conversion2 after the first turn](#smart-ai-discourages-conversion2-after-the-first-turn)
   - [AI makes a false assumption about `CheckTypeMatchup`](#ai-makes-a-false-assumption-about-checktypematchup)
   - [AI use of Full Heal or Full Restore does not cure Nightmare status](#ai-use-of-full-heal-or-full-restore-does-not-cure-nightmare-status)
   - [AI use of Full Heal does not cure confusion status](#ai-use-of-full-heal-does-not-cure-confusion-status)
@@ -1051,20 +1050,6 @@ This can occur if your party and current PC box are both full when you start the
 +	ld a, [wPlayerSubStatus5]
  	bit SUBSTATUS_TOXIC, a
  	jr nz, .asm_38e26
-```
-
-
-### "Smart" AI discourages Conversion2 after the first turn
-
-**Fix:** Edit `AI_Smart_Conversion2` in [engine/battle/ai/scoring.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle/ai/scoring.asm):
-
-```diff
- AI_Smart_Conversion2:
--; BUG: "Smart" AI discourages Conversion2 after the first turn (see docs/bugs_and_glitches.md)
- 	ld a, [wLastPlayerMove]
- 	and a
--	jr nz, .discourage
-+	jr z, .discourage
 ```
 
 
