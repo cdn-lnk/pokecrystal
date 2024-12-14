@@ -94,7 +94,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
 - [Scripted events](#scripted-events)
   - [Clair can give TM24 Dragonbreath twice](#clair-can-give-tm24-dragonbreath-twice)
   - [Daisy's grooming doesn't always increase happiness](#daisys-grooming-doesnt-always-increase-happiness)
-  - [Magikarp in Lake of Rage are shorter, not longer](#magikarp-in-lake-of-rage-are-shorter-not-longer)
   - [Magikarp length limits have a unit conversion error](#magikarp-length-limits-have-a-unit-conversion-error)
   - [Magikarp lengths can be miscalculated](#magikarp-lengths-can-be-miscalculated)
   - [`CheckOwnMon` only checks the first five letters of OT names](#checkownmon-only-checks-the-first-five-letters-of-ot-names)
@@ -2360,35 +2359,6 @@ CopyPokemonName_Buffer1_Buffer3:
 -	db -1,             2, HAPPINESS_GROOMING ; 99.6% chance
 +	db 50 percent,     2, HAPPINESS_GROOMING ; 50% chance
 +	db -1,             2, HAPPINESS_GROOMING ; 50% chance
-```
-
-
-### Magikarp in Lake of Rage are shorter, not longer
-
-`cp HIGH(1024)` should be `cp 3`, since 1024 mm = 3'4", but `HIGH(1024)` = 4.
-
-**Fix:** Edit `LoadEnemyMon.CheckMagikarpArea` in [engine/battle/core.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle/core.asm):
-
-```diff
- .CheckMagikarpArea:
--; BUG: Magikarp in Lake of Rage are shorter, not longer (see docs/bugs_and_glitches.md)
- 	ld a, [wMapGroup]
- 	cp GROUP_LAKE_OF_RAGE
--	jr z, .Happiness
-+	jr nz, .Happiness
- 	ld a, [wMapNumber]
- 	cp MAP_LAKE_OF_RAGE
--	jr z, .Happiness
-+	jr nz, .Happiness
- ; 40% chance of not flooring
- 	call Random
- 	cp 39 percent + 1
- 	jr c, .Happiness
- ; Try again if length < 1024 mm (i.e. if HIGH(length) < 3 feet)
- 	ld a, [wMagikarpLength]
--	cp HIGH(1024)
-+	cp 3
- 	jr c, .GenerateDVs ; try again
 ```
 
 
