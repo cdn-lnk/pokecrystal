@@ -42,7 +42,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Catching a Transformed Pokémon always catches a Ditto](#catching-a-transformed-pok%C3%A9mon-always-catches-a-ditto)
   - [Experience underflow for level 1 Pokémon with Medium-Slow growth rate](#experience-underflow-for-level-1-pok%C3%A9mon-with-medium-slow-growth-rate)
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
-  - [Fast Ball only boosts catch rate for three Pokémon](#fast-ball-only-boosts-catch-rate-for-three-pok%C3%A9mon)
   - [Heavy Ball uses wrong weight value for three Pokémon](#heavy-ball-uses-wrong-weight-value-for-three-pok%C3%A9mon)
   - ["Smart" AI encourages Mean Look if its own Pokémon is badly poisoned](#smart-ai-encourages-mean-look-if-its-own-pok%C3%A9mon-is-badly-poisoned)
   - ["Smart" AI discourages Conversion2 after the first turn](#smart-ai-discourages-conversion2-after-the-first-turn)
@@ -1060,27 +1059,6 @@ This can occur if your party and current PC box are both full when you start the
  	cp MONS_PER_BOX
  	call CloseSRAM
  	jp z, Ball_BoxIsFullMessage
-```
-
-
-### Fast Ball only boosts catch rate for three Pokémon
-
-**Fix:** Edit `FastBallMultiplier` in [engine/items/item_effects.asm](https://github.com/pret/pokecrystal/blob/master/engine/items/item_effects.asm):
-
-```diff
- .loop
--; BUG: Fast Ball only boosts catch rate for three Pokémon (see docs/bugs_and_glitches.md)
- 	ld a, BANK(FleeMons)
- 	call GetFarByte
-
- 	inc hl
- 	cp -1
- 	jr z, .next
- 	cp c
--	jr nz, .next
-+	jr nz, .loop
- 	sla b
- 	jr c, .max
 ```
 
 
