@@ -67,7 +67,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Slowpoke Well's stones use the wrong corner tile](#slowpoke-wells-stones-use-the-wrong-corner-tile)
   - [A hatching Unown egg would not show the right letter](#a-hatching-unown-egg-would-not-show-the-right-letter)
   - [Beat Up may fail to raise Substitute](#beat-up-may-fail-to-raise-substitute)
-  - [HP bar animation is slow for high HP](#hp-bar-animation-is-slow-for-high-hp)
   - [HP bar animation off-by-one error for low HP](#hp-bar-animation-off-by-one-error-for-low-hp)
   - [Using a Park Ball in non-Contest battles has a corrupt animation](#using-a-park-ball-in-non-contest-battles-has-a-corrupt-animation)
   - [Battle transitions fail to account for the enemy's level](#battle-transitions-fail-to-account-for-the-enemys-level)
@@ -1654,29 +1653,6 @@ This bug prevents Substitute from being raised if Beat Up was blocked by Protect
  .multihit
  	call BattleCommand_RaiseSub
  	jp EndMoveEffect
-```
-
-
-### HP bar animation is slow for high HP
-
-([Video](https://www.youtube.com/watch?v=SE-BfsFgZVM))
-
-**Fix:** Edit `LongAnim_UpdateVariables` in [engine/battle/anim_hp_bar.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle/anim_hp_bar.asm):
-
-```diff
--; BUG: HP bar animation is slow for high HP (see docs/bugs_and_glitches.md)
- 	call ComputeHPBarPixels
-+	ld a, e
- 	pop bc
- 	pop de
- 	pop hl
--	ld a, e
- 	ld hl, wCurHPBarPixels
- 	cp [hl]
- 	jr z, .loop
- 	ld [hl], a
- 	and a
- 	ret
 ```
 
 
