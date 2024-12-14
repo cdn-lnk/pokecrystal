@@ -67,7 +67,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Slowpoke Well's stones use the wrong corner tile](#slowpoke-wells-stones-use-the-wrong-corner-tile)
   - [A hatching Unown egg would not show the right letter](#a-hatching-unown-egg-would-not-show-the-right-letter)
   - [Beat Up may fail to raise Substitute](#beat-up-may-fail-to-raise-substitute)
-  - [HP bar animation off-by-one error for low HP](#hp-bar-animation-off-by-one-error-for-low-hp)
   - [Using a Park Ball in non-Contest battles has a corrupt animation](#using-a-park-ball-in-non-contest-battles-has-a-corrupt-animation)
   - [Battle transitions fail to account for the enemy's level](#battle-transitions-fail-to-account-for-the-enemys-level)
   - [Some trainer NPCs have inconsistent overworld sprites](#some-trainer-npcs-have-inconsistent-overworld-sprites)
@@ -1653,29 +1652,6 @@ This bug prevents Substitute from being raised if Beat Up was blocked by Protect
  .multihit
  	call BattleCommand_RaiseSub
  	jp EndMoveEffect
-```
-
-
-### HP bar animation off-by-one error for low HP
-
-([Video](https://www.youtube.com/watch?v=9KyNVIZxJvI))
-
-**Fix:** Edit `ShortHPBar_CalcPixelFrame` in [engine/battle/anim_hp_bar.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle/anim_hp_bar.asm):
-
-```diff
- 	ld b, 0
- .loop
--; BUG: HP bar animation off-by-one error for low HP (see docs/bugs_and_glitches.md)
- 	ld a, l
- 	sub HP_BAR_LENGTH_PX
- 	ld l, a
- 	ld a, h
- 	sbc $0
- 	ld h, a
-+	jr z, .done
- 	jr c, .done
- 	inc b
- 	jr .loop
 ```
 
 
