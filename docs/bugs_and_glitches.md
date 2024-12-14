@@ -94,7 +94,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
 - [Scripted events](#scripted-events)
   - [Clair can give TM24 Dragonbreath twice](#clair-can-give-tm24-dragonbreath-twice)
   - [Daisy's grooming doesn't always increase happiness](#daisys-grooming-doesnt-always-increase-happiness)
-  - [Magikarp length limits have a unit conversion error](#magikarp-length-limits-have-a-unit-conversion-error)
   - [Magikarp lengths can be miscalculated](#magikarp-lengths-can-be-miscalculated)
   - [`CheckOwnMon` only checks the first five letters of OT names](#checkownmon-only-checks-the-first-five-letters-of-ot-names)
   - [`CheckOwnMonAnywhere` does not check the Day-Care](#checkownmonanywhere-does-not-check-the-day-care)
@@ -2360,51 +2359,6 @@ CopyPokemonName_Buffer1_Buffer3:
 +	db 50 percent,     2, HAPPINESS_GROOMING ; 50% chance
 +	db -1,             2, HAPPINESS_GROOMING ; 50% chance
 ```
-
-
-### Magikarp length limits have a unit conversion error
-
-- `cp HIGH(1536)` should be `cp 5`, since 1536 mm = 5'0", but `HIGH(1536)` = 6.
-- `cp LOW(1616)` should be `cp 4`, since 1616 mm = 5'4", but `LOW(1616)` = 80.
-- `cp LOW(1600)` should be `cp 3`, since 1600 mm = 5'3", but `LOW(1600)` = 64.
-
-**Fix:** Edit `LoadEnemyMon.CheckMagikarpArea` in [engine/battle/core.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle/core.asm):
-
-```diff
- ; Get Magikarp's length
--; BUG: Magikarp length limits have a unit conversion error (see docs/bugs_and_glitches.md)
- 	ld de, wEnemyMonDVs
- 	ld bc, wPlayerID
- 	callfar CalcMagikarpLength
-
- ; No reason to keep going if length > 1536 mm (i.e. if HIGH(length) > 6 feet)
- 	ld a, [wMagikarpLength]
--	cp HIGH(1536)
-+	cp 5
- 	jr nz, .CheckMagikarpArea
-
- ; 5% chance of skipping both size checks
- 	call Random
- 	cp 5 percent
- 	jr c, .CheckMagikarpArea
- ; Try again if length >= 1616 mm (i.e. if LOW(length) >= 4 inches)
- 	ld a, [wMagikarpLength + 1]
--	cp LOW(1616)
-+	cp 4
- 	jr nc, .GenerateDVs
-
- ; 20% chance of skipping this check
- 	call Random
- 	cp 20 percent - 1
- 	jr c, .CheckMagikarpArea
- ; Try again if length >= 1600 mm (i.e. if LOW(length) >= 3 inches)
- 	ld a, [wMagikarpLength + 1]
--	cp LOW(1600)
-+	cp 3
- 	jr nc, .GenerateDVs
-```
-
-**Better fix:** Rewrite the whole system to use millimeters instead of feet and inches, since they have better precision (1 in = 25.4 mm); and only convert from metric to imperial units for display purposes (or don't, of course).
 
 
 ### Magikarp lengths can be miscalculated
