@@ -42,7 +42,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Catching a Transformed Pokémon always catches a Ditto](#catching-a-transformed-pok%C3%A9mon-always-catches-a-ditto)
   - [Experience underflow for level 1 Pokémon with Medium-Slow growth rate](#experience-underflow-for-level-1-pok%C3%A9mon-with-medium-slow-growth-rate)
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
-  - [Heavy Ball uses wrong weight value for three Pokémon](#heavy-ball-uses-wrong-weight-value-for-three-pok%C3%A9mon)
   - ["Smart" AI encourages Mean Look if its own Pokémon is badly poisoned](#smart-ai-encourages-mean-look-if-its-own-pok%C3%A9mon-is-badly-poisoned)
   - ["Smart" AI discourages Conversion2 after the first turn](#smart-ai-discourages-conversion2-after-the-first-turn)
   - ["Smart" AI does not encourage Solar Beam, Flame Wheel, or Moonlight during Sunny Day](#smart-ai-does-not-encourage-solar-beam-flame-wheel-or-moonlight-during-sunny-day)
@@ -1059,39 +1058,6 @@ This can occur if your party and current PC box are both full when you start the
  	cp MONS_PER_BOX
  	call CloseSRAM
  	jp z, Ball_BoxIsFullMessage
-```
-
-
-### Heavy Ball uses wrong weight value for three Pokémon
-
-`HeavyBall_GetDexEntryBank` gets the wrong bank for Kadabra (64), Tauros (128), and Sunflora (192).
-
-**Fix:** Edit `HeavyBall_GetDexEntryBank` in [engine/items/item_effects.asm](https://github.com/pret/pokecrystal/blob/master/engine/items/item_effects.asm):
-
-```diff
- HeavyBall_GetDexEntryBank:
--; BUG: Heavy Ball uses wrong weight value for three Pokemon (see docs/bugs_and_glitches.md)
- 	push hl
- 	push de
- 	ld a, [wEnemyMonSpecies]
-+	dec a
- 	rlca
- 	rlca
- 	maskbits NUM_DEX_ENTRY_BANKS
- 	ld hl, .PokedexEntryBanks
- 	ld d, 0
- 	ld e, a
- 	add hl, de
- 	ld a, [hl]
- 	pop de
- 	pop hl
- 	ret
-
- .PokedexEntryBanks:
- 	db BANK("Pokedex Entries 001-064")
- 	db BANK("Pokedex Entries 065-128")
- 	db BANK("Pokedex Entries 129-192")
- 	db BANK("Pokedex Entries 193-251")
 ```
 
 
