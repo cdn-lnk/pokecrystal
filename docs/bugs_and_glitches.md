@@ -42,7 +42,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Catching a Transformed Pokémon always catches a Ditto](#catching-a-transformed-pok%C3%A9mon-always-catches-a-ditto)
   - [Experience underflow for level 1 Pokémon with Medium-Slow growth rate](#experience-underflow-for-level-1-pok%C3%A9mon-with-medium-slow-growth-rate)
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
-  - [BRN/PSN/PAR do not affect catch rate](#brnpsnpar-do-not-affect-catch-rate)
   - [Moon Ball does not boost catch rate](#moon-ball-does-not-boost-catch-rate)
   - [Love Ball boosts catch rate for the wrong gender](#love-ball-boosts-catch-rate-for-the-wrong-gender)
   - [Fast Ball only boosts catch rate for three Pokémon](#fast-ball-only-boosts-catch-rate-for-three-pok%C3%A9mon)
@@ -1063,32 +1062,6 @@ This can occur if your party and current PC box are both full when you start the
  	cp MONS_PER_BOX
  	call CloseSRAM
  	jp z, Ball_BoxIsFullMessage
-```
-
-
-### BRN/PSN/PAR do not affect catch rate
-
-**Fix:** Edit `PokeBallEffect` in [engine/items/item_effects.asm](https://github.com/pret/pokecrystal/blob/master/engine/items/item_effects.asm):
-
-```diff
- .statuscheck
--; BUG: BRN/PSN/PAR do not affect catch rate (see docs/bugs_and_glitches.md)
- 	ld b, a
- 	ld a, [wEnemyMonStatus]
- 	and 1 << FRZ | SLP_MASK
- 	ld c, 10
- 	jr nz, .addstatus
-+	ld a, [wEnemyMonStatus]
- 	and a
- 	ld c, 5
- 	jr nz, .addstatus
- 	ld c, 0
- .addstatus
- 	ld a, b
- 	add c
- 	jr nc, .max_1
- 	ld a, $ff
- .max_1
 ```
 
 
