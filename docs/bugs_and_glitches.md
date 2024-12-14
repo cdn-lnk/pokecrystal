@@ -42,7 +42,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Catching a Transformed Pokémon always catches a Ditto](#catching-a-transformed-pok%C3%A9mon-always-catches-a-ditto)
   - [Experience underflow for level 1 Pokémon with Medium-Slow growth rate](#experience-underflow-for-level-1-pok%C3%A9mon-with-medium-slow-growth-rate)
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
-  - [Moon Ball does not boost catch rate](#moon-ball-does-not-boost-catch-rate)
   - [Love Ball boosts catch rate for the wrong gender](#love-ball-boosts-catch-rate-for-the-wrong-gender)
   - [Fast Ball only boosts catch rate for three Pokémon](#fast-ball-only-boosts-catch-rate-for-three-pok%C3%A9mon)
   - [Heavy Ball uses wrong weight value for three Pokémon](#heavy-ball-uses-wrong-weight-value-for-three-pok%C3%A9mon)
@@ -1063,30 +1062,6 @@ This can occur if your party and current PC box are both full when you start the
  	call CloseSRAM
  	jp z, Ball_BoxIsFullMessage
 ```
-
-
-### Moon Ball does not boost catch rate
-
-The Moon Ball checks the wrong memory address for the wrong item ID, so no Pokémon can receive the boost.
-
-**Fix:** Edit `MoonBallMultiplier` in [engine/items/item_effects.asm](https://github.com/pret/pokecrystal/blob/master/engine/items/item_effects.asm):
-
-```diff
--; BUG: Moon Ball does not boost catch rate (see docs/bugs_and_glitches.md)
- 	inc hl
--	inc hl
--	inc hl
-
- 	push bc
- 	ld a, BANK("Evolutions and Attacks")
- 	call GetFarByte
--	cp MOON_STONE_RED ; BURN_HEAL
-+	cp MOON_STONE
- 	pop bc
- 	ret nz
-```
-
-Note that this fix only accounts for Pokémon that evolve via Moon Stone as their first evolution method. However, that is sufficient to cover all Pokémon in the game that can evolve by Moon Stone.
 
 
 ### Love Ball boosts catch rate for the wrong gender
