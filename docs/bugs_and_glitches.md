@@ -43,7 +43,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
   - ["Smart" AI encourages Mean Look if its own Pokémon is badly poisoned](#smart-ai-encourages-mean-look-if-its-own-pok%C3%A9mon-is-badly-poisoned)
   - ["Smart" AI discourages Conversion2 after the first turn](#smart-ai-discourages-conversion2-after-the-first-turn)
-  - ["Smart" AI does not encourage Solar Beam, Flame Wheel, or Moonlight during Sunny Day](#smart-ai-does-not-encourage-solar-beam-flame-wheel-or-moonlight-during-sunny-day)
   - [AI does not discourage Future Sight when it's already been used](#ai-does-not-discourage-future-sight-when-its-already-been-used)
   - [AI makes a false assumption about `CheckTypeMatchup`](#ai-makes-a-false-assumption-about-checktypematchup)
   - [AI use of Full Heal or Full Restore does not cure Nightmare status](#ai-use-of-full-heal-or-full-restore-does-not-cure-nightmare-status)
@@ -1067,28 +1066,6 @@ This can occur if your party and current PC box are both full when you start the
  	and a
 -	jr nz, .discourage
 +	jr z, .discourage
-```
-
-
-### "Smart" AI does not encourage Solar Beam, Flame Wheel, or Moonlight during Sunny Day
-
-**Fix:** Edit `SunnyDayMoves` in [data/battle/ai/sunny_day_moves.asm](https://github.com/pret/pokecrystal/blob/master/data/battle/ai/sunny_day_moves.asm):
-
-```diff
- SunnyDayMoves:
--; BUG: "Smart" AI does not encourage Solar Beam, Flame Wheel, or Moonlight during Sunny Day (see docs/bugs_and_glitches.md)
- 	db FIRE_PUNCH
- 	db EMBER
- 	db FLAMETHROWER
-+	db SOLARBEAM
- 	db FIRE_SPIN
- 	db FIRE_BLAST
-+	db FLAME_WHEEL
- 	db SACRED_FIRE
- 	db MORNING_SUN
- 	db SYNTHESIS
-+	db MOONLIGHT
- 	db -1 ; end
 ```
 
 
