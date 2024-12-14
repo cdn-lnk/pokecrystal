@@ -94,7 +94,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
 - [Scripted events](#scripted-events)
   - [Clair can give TM24 Dragonbreath twice](#clair-can-give-tm24-dragonbreath-twice)
   - [Daisy's grooming doesn't always increase happiness](#daisys-grooming-doesnt-always-increase-happiness)
-  - [`CheckOwnMon` only checks the first five letters of OT names](#checkownmon-only-checks-the-first-five-letters-of-ot-names)
   - [`CheckOwnMonAnywhere` does not check the Day-Care](#checkownmonanywhere-does-not-check-the-day-care)
   - [The unused `phonecall` script command may crash](#the-unused-phonecall-script-command-may-crash)
 - [Internal engine routines](#internal-engine-routines)
@@ -2357,37 +2356,6 @@ CopyPokemonName_Buffer1_Buffer3:
 -	db -1,             2, HAPPINESS_GROOMING ; 99.6% chance
 +	db 50 percent,     2, HAPPINESS_GROOMING ; 50% chance
 +	db -1,             2, HAPPINESS_GROOMING ; 50% chance
-```
-
-
-### `CheckOwnMon` only checks the first five letters of OT names
-
-([Video](https://www.youtube.com/watch?v=GVTTmReM4nQ))
-
-This bug can allow you to talk to Eusine in Celadon City and encounter Ho-Oh with only traded legendary beasts.
-
-**Fix:** Edit `CheckOwnMon` in [engine/pokemon/search_owned.asm](https://github.com/pret/pokecrystal/blob/master/engine/pokemon/search_owned.asm):
-
-```diff
- 	; check OT
-
- 	ld hl, wPlayerName
-
--; BUG: CheckOwnMon only checks the first five letters of OT names (see docs/bugs_and_glitches.md)
--rept NAME_LENGTH_JAPANESE - 2
-+rept PLAYER_NAME_LENGTH - 2
- 	ld a, [de]
- 	cp [hl]
- 	jr nz, .notfound
- 	cp "@"
- 	jr z, .found ; reached end of string
- 	inc hl
- 	inc de
- endr
-
- 	ld a, [de]
- 	cp [hl]
- 	jr z, .found
 ```
 
 
