@@ -47,7 +47,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Love Ball boosts catch rate for the wrong gender](#love-ball-boosts-catch-rate-for-the-wrong-gender)
   - [Fast Ball only boosts catch rate for three Pokémon](#fast-ball-only-boosts-catch-rate-for-three-pok%C3%A9mon)
   - [Heavy Ball uses wrong weight value for three Pokémon](#heavy-ball-uses-wrong-weight-value-for-three-pok%C3%A9mon)
-  - [Glacier Badge may not boost Special Defense depending on the value of Special Attack](#glacier-badge-may-not-boost-special-defense-depending-on-the-value-of-special-attack)
   - ["Smart" AI encourages Mean Look if its own Pokémon is badly poisoned](#smart-ai-encourages-mean-look-if-its-own-pok%C3%A9mon-is-badly-poisoned)
   - ["Smart" AI discourages Conversion2 after the first turn](#smart-ai-discourages-conversion2-after-the-first-turn)
   - ["Smart" AI does not encourage Solar Beam, Flame Wheel, or Moonlight during Sunny Day](#smart-ai-does-not-encourage-solar-beam-flame-wheel-or-moonlight-during-sunny-day)
@@ -1185,32 +1184,6 @@ Note that this fix only accounts for Pokémon that evolve via Moon Stone as thei
  	db BANK("Pokedex Entries 065-128")
  	db BANK("Pokedex Entries 129-192")
  	db BANK("Pokedex Entries 193-251")
-```
-
-
-### Glacier Badge may not boost Special Defense depending on the value of Special Attack
-
-Pryce's dialog ("That BADGE will raise the SPECIAL stats of POKéMON.") implies that Glacier Badge is intended to boost both Special Attack and Special Defense, but the Special Defense boost will not happen unless the unboosted Special Attack stat is 206–432, or 661 or above.
-
-**Fix:** Edit `BadgeStatBoosts.CheckBadge` in [engine/battle/core.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle/core.asm):
-
-```diff
- .CheckBadge:
--; BUG: Glacier Badge may not boost Special Defense depending on the value of Special Attack (see docs/bugs_and_glitches.md)
- 	ld a, b
- 	srl b
-+	push af
- 	call c, BoostStat
-+	pop af
- 	inc hl
- 	inc hl
- ; Check every other badge.
- 	srl b
- 	dec c
- 	jr nz, .CheckBadge
- 	srl a
- 	call c, BoostStat
- 	ret
 ```
 
 
