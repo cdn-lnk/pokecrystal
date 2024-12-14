@@ -34,7 +34,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Beat Up may trigger King's Rock even if it failed](#beat-up-may-trigger-kings-rock-even-if-it-failed)
   - [Present damage is incorrect in link battles](#present-damage-is-incorrect-in-link-battles)
   - [Return and Frustration deal no damage when the user's happiness is low or high, respectively](#return-and-frustration-deal-no-damage-when-the-users-happiness-is-low-or-high-respectively)
-  - [Dragon Scale, not Dragon Fang, boosts Dragon-type moves](#dragon-scale-not-dragon-fang-boosts-dragon-type-moves)
   - [Switching out or switching against a Pokémon with max HP below 4 freezes the game](#switching-out-or-switching-against-a-pok%C3%A9mon-with-max-HP-below-4-freezes-the-game)
   - [Moves that do damage and increase your stats do not increase stats after a KO](#moves-that-do-damage-and-increase-your-stats-do-not-increase-stats-after-a-ko)
 - [Single-player battle engine](#single-player-battle-engine)
@@ -775,22 +774,6 @@ And edit [engine/battle/move_effects/frustration.asm](https://github.com/pret/po
  	ld d, a
  	pop bc
  	ret
-```
-
-
-### Dragon Scale, not Dragon Fang, boosts Dragon-type moves
-
-**Fix:** Edit `ItemAttributes` in [data/items/attributes.asm](https://github.com/pret/pokecrystal/blob/master/data/items/attributes.asm):
-
-```diff
--; BUG: Dragon Scale, not Dragon Fang, boosts Dragon-type moves (see docs/bugs_and_glitches.md)
- ; DRAGON_FANG
--	item_attribute 100, HELD_NONE, 0, CANT_SELECT, ITEM, ITEMMENU_NOUSE, ITEMMENU_NOUSE
-+	item_attribute 100, HELD_DRAGON_BOOST, 10, CANT_SELECT, ITEM, ITEMMENU_NOUSE, ITEMMENU_NOUSE
- ...
- ; DRAGON_SCALE
--	item_attribute 2100, HELD_DRAGON_BOOST, 10, CANT_SELECT, ITEM, ITEMMENU_NOUSE, ITEMMENU_NOUSE
-+	item_attribute 2100, HELD_NONE, 0, CANT_SELECT, ITEM, ITEMMENU_NOUSE, ITEMMENU_NOUSE
 ```
 
 
