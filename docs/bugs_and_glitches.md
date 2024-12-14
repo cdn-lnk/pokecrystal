@@ -94,7 +94,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
 - [Scripted events](#scripted-events)
   - [Clair can give TM24 Dragonbreath twice](#clair-can-give-tm24-dragonbreath-twice)
   - [Daisy's grooming doesn't always increase happiness](#daisys-grooming-doesnt-always-increase-happiness)
-  - [Magikarp lengths can be miscalculated](#magikarp-lengths-can-be-miscalculated)
   - [`CheckOwnMon` only checks the first five letters of OT names](#checkownmon-only-checks-the-first-five-letters-of-ot-names)
   - [`CheckOwnMonAnywhere` does not check the Day-Care](#checkownmonanywhere-does-not-check-the-day-care)
   - [The unused `phonecall` script command may crash](#the-unused-phonecall-script-command-may-crash)
@@ -2358,23 +2357,6 @@ CopyPokemonName_Buffer1_Buffer3:
 -	db -1,             2, HAPPINESS_GROOMING ; 99.6% chance
 +	db 50 percent,     2, HAPPINESS_GROOMING ; 50% chance
 +	db -1,             2, HAPPINESS_GROOMING ; 50% chance
-```
-
-
-### Magikarp lengths can be miscalculated
-
-**Fix:** Edit `CalcMagikarpLength.BCLessThanDE` in [engine/events/magikarp.asm](https://github.com/pret/pokecrystal/blob/master/engine/events/magikarp.asm):
-
-```diff
- .BCLessThanDE:
--; BUG: Magikarp lengths can be miscalculated (see docs/bugs_and_glitches.md)
- 	ld a, b
- 	cp d
- 	ret c
--	ret nc
- 	ld a, c
- 	cp e
- 	ret
 ```
 
 
