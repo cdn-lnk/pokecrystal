@@ -67,7 +67,7 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Tackle is missing part of its hit animation](#tackle-is-missing-part-of-its-hit-animation)
 - [Audio](#audio)
   - [Slot machine payout sound effects cut each other off](#slot-machine-payout-sound-effects-cut-each-other-off)
-  - [Team Rocket battle music is not used for Executives or Scientists](#team-rocket-battle-music-is-not-used-for-executives-or-scientists)
+  - [Team Rocket battle music is not used for Scientists](#team-rocket-battle-music-is-not-used-for-scientists)
   - [No bump noise if standing on tile `$3E`](#no-bump-noise-if-standing-on-tile-3e)
   - [Playing Entei's Pokédex cry can distort Raikou's and Suicune's](#playing-enteis-pok%C3%A9dex-cry-can-distort-raikous-and-suicunes)
   - [`SFX_RUN` does not play correctly when a wild Pokémon flees from battle](#sfx_run-does-not-play-correctly-when-a-wild-pok%C3%A9mon-flees-from-battle)
@@ -1776,21 +1776,21 @@ Copying two rows causes `BATTLE_BG_EFFECT_TACKLE` to hit the horizontal sprite l
 ```
 
 
-### Team Rocket battle music is not used for Executives or Scientists
+### Team Rocket battle music is not used for Scientists
 
 **Fix:** Edit `PlayBattleMusic` in [engine/battle/start_battle.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle/start_battle.asm):
 
 ```diff
--; BUG: Team Rocket battle music is not used for Executives or Scientists (see docs/bugs_and_glitches.md)
+-; BUG: Team Rocket battle music is not used for Scientists (see docs/bugs_and_glitches.md)
  	ld de, MUSIC_ROCKET_BATTLE
  	cp GRUNTM
  	jr z, .done
  	cp GRUNTF
  	jr z, .done
-+	cp EXECUTIVEM
-+	jr z, .done
-+	cp EXECUTIVEF
-+	jr z, .done
+	cp EXECUTIVEM
+	jr z, .done
+	cp EXECUTIVEF
+	jr z, .done
 +	cp SCIENTIST
 +	jr z, .done
 ```
