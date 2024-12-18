@@ -3646,7 +3646,7 @@ BattleCommand_SleepTarget:
 	; Not in link battle
 	ld a, [wLinkMode]
 	and a
-	jr nz, .dont_fail
+	jr .dont_fail
 
 	ld a, [wInBattleTowerBattle]
 	and a
@@ -3737,7 +3737,7 @@ BattleCommand_Poison:
 
 	ld a, [wLinkMode]
 	and a
-	jr nz, .dont_sample_failure
+	jr .dont_sample_failure
 
 	ld a, [wInBattleTowerBattle]
 	and a
@@ -4356,7 +4356,7 @@ BattleCommand_StatDown:
 
 	ld a, [wLinkMode]
 	and a
-	jr nz, .DidntMiss
+	jr .DidntMiss
 
 	ld a, [wInBattleTowerBattle]
 	and a
@@ -5854,7 +5854,7 @@ BattleCommand_Paralyze:
 
 	ld a, [wLinkMode]
 	and a
-	jr nz, .dont_sample_failure
+	jr .dont_sample_failure
 
 	ld a, [wInBattleTowerBattle]
 	and a
