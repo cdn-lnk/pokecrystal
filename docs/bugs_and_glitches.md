@@ -113,7 +113,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [`RandomUnseenWildMon` always picks a morning Pokémon species](#randomunseenwildmon-always-picks-a-morning-pok%C3%A9mon-species)
   - [`TryObjectEvent` arbitrary code execution](#tryobjectevent-arbitrary-code-execution)
   - [`ReadObjectEvents` overflows into `wObjectMasks`](#readobjectevents-overflows-into-wobjectmasks)
-  - [`ClearWRAM` only clears WRAM bank 1](#clearwram-only-clears-wram-bank-1)
   - [`BattleAnimCmd_ClearObjs` only clears the first 6⅔ objects](#battleanimcmd_clearobjs-only-clears-the-first-6-objects)
 
 
@@ -2845,33 +2844,6 @@ If `IsInArray` returns `nc`, data at `bc` will be executed as code.
  	add hl, bc
  	dec a
  	jr nz, .loop
-```
-
-
-### `ClearWRAM` only clears WRAM bank 1
-
-**Fix:** Edit `ClearWRAM` in [home/init.asm](https://github.com/pret/pokecrystal/blob/master/home/init.asm):
-
-```diff
- ClearWRAM::
- ; Wipe swappable WRAM banks (1-7)
- ; Assumes CGB or AGB
--; BUG: ClearWRAM only clears WRAM bank 1 (see docs/bugs_and_glitches.md)
-
- 	ld a, 1
- .bank_loop
- 	push af
- 	ldh [rWBK], a
- 	xor a
- 	ld hl, STARTOF(WRAMX)
- 	ld bc, SIZEOF(WRAMX)
- 	call ByteFill
- 	pop af
- 	inc a
- 	cp 8
--	jr nc, .bank_loop
-+	jr c, .bank_loop
- 	ret
 ```
 
 
