@@ -47,7 +47,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [AI use of Full Heal or Full Restore does not cure Nightmare status](#ai-use-of-full-heal-or-full-restore-does-not-cure-nightmare-status)
   - [AI use of Full Heal does not cure confusion status](#ai-use-of-full-heal-does-not-cure-confusion-status)
   - [AI use of Full Heal or Full Restore does not cure Attack or Speed drops from burn or paralysis](#ai-use-of-full-heal-or-full-restore-does-not-cure-attack-or-speed-drops-from-Burn-or-Paralysis)
-  - [Wild Pokémon can always Teleport regardless of level difference](#wild-pok%C3%A9mon-can-always-teleport-regardless-of-level-difference)
   - [`RIVAL2` has lower DVs than `RIVAL1`](#rival2-has-lower-dvs-than-rival1)
   - [Credits sequence changes move selection menu behavior](#credits-sequence-changes-move-selection-menu-behavior)
 - [Overworld engine](#overworld-engine)
@@ -1189,26 +1188,6 @@ There is an incorrect assumption about this function made in the AI related code
  	res SUBSTATUS_TOXIC, [hl]
 +	farcall CalcEnemyStats
  	ret
-```
-
-
-### Wild Pokémon can always Teleport regardless of level difference
-
-**Fix:** Edit `BattleCommand_Teleport` in [engine/battle/move_effects/teleport.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle/move_effects/teleport.asm):
-
-```diff
- .loop_enemy
--; BUG: Wild Pokémon can always Teleport regardless of level difference (see docs/bugs_and_glitches.md)
-+; If a random number >= player level / 4, Teleport will succeed
- 	call BattleRandom
- 	cp c
- 	jr nc, .loop_enemy
- 	; b = player level / 4
- 	srl b
- 	srl b
- 	cp b
--	jr nc, .run_away
-+	jr c, .failed
 ```
 
 
