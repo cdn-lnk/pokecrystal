@@ -112,7 +112,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [`ChooseWildEncounter` doesn't really validate the wild Pokémon species](#choosewildencounter-doesnt-really-validate-the-wild-pok%C3%A9mon-species)
   - [`TryObjectEvent` arbitrary code execution](#tryobjectevent-arbitrary-code-execution)
   - [`ReadObjectEvents` overflows into `wObjectMasks`](#readobjectevents-overflows-into-wobjectmasks)
-  - [`BattleAnimCmd_ClearObjs` only clears the first 6⅔ objects](#battleanimcmd_clearobjs-only-clears-the-first-6-objects)
 
 
 ## Multi-player battle engine
@@ -2824,23 +2823,4 @@ If `IsInArray` returns `nc`, data at `bc` will be executed as code.
  	add hl, bc
  	dec a
  	jr nz, .loop
-```
-
-
-### `BattleAnimCmd_ClearObjs` only clears the first 6⅔ objects
-
-**Fix:** Edit `BattleAnimCmd_ClearObjs` in [engine/battle_anims/anim_commands.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle_anims/anim_commands.asm):
-
-```diff
- BattleAnimCmd_ClearObjs:
--; BUG: BattleAnimCmd only clears the first 6⅔ objects (see docs/bugs_and_glitches.md)
- 	ld hl, wActiveAnimObjects
--	ld a, $a0
-+	ld a, NUM_BATTLE_ANIM_STRUCTS * BATTLEANIMSTRUCT_LENGTH
- .loop
- 	ld [hl], 0
- 	inc hl
- 	dec a
- 	jr nz, .loop
- 	ret
 ```
