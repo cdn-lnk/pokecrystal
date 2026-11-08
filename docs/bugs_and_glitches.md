@@ -110,7 +110,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [`ScriptCall` can overflow `wScriptStack` and crash](#scriptcall-can-overflow-wscriptstack-and-crash)
   - [`LoadSpriteGFX` does not limit the capacity of `UsedSprites`](#loadspritegfx-does-not-limit-the-capacity-of-usedsprites)
   - [`ChooseWildEncounter` doesn't really validate the wild Pokémon species](#choosewildencounter-doesnt-really-validate-the-wild-pok%C3%A9mon-species)
-  - [`RandomUnseenWildMon` always picks a morning Pokémon species](#randomunseenwildmon-always-picks-a-morning-pok%C3%A9mon-species)
   - [`TryObjectEvent` arbitrary code execution](#tryobjectevent-arbitrary-code-execution)
   - [`ReadObjectEvents` overflows into `wObjectMasks`](#readobjectevents-overflows-into-wobjectmasks)
   - [`BattleAnimCmd_ClearObjs` only clears the first 6⅔ objects](#battleanimcmd_clearobjs-only-clears-the-first-6-objects)
@@ -2766,25 +2765,6 @@ This allows Pokémon to be duplicated, among other effects. It does not have a s
 -	ld a, b
  	cp UNOWN
  	jr nz, .done
-```
-
-
-### `RandomUnseenWildMon` always picks a morning Pokémon species
-
-**Fix:** Edit `RandomUnseenWildMon` in [engine/overworld/wildmons.asm](https://github.com/pret/pokecrystal/blob/master/engine/overworld/wildmons.asm):
-
-```diff
- .GetGrassmon:
--; BUG: RandomUnseenWildMon always picks a morning Pokémon species (see docs/bugs_and_glitches.md)
-+	ld a, [wTimeOfDay]
-+	ld bc, NUM_GRASSMON * 2
-+	call AddNTimes
- 	push hl
- 	ld bc, 5 + 4 * 2 ; Location of the level of the 5th wild Pokemon in that map
- 	add hl, bc
--	ld a, [wTimeOfDay]
--	ld bc, NUM_GRASSMON * 2
--	call AddNTimes
 ```
 
 
