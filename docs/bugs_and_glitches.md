@@ -41,7 +41,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [A Transformed Pokémon can use Sketch and learn otherwise unobtainable moves](#a-transformed-pok%C3%A9mon-can-use-sketch-and-learn-otherwise-unobtainable-moves)
   - [Experience underflow for level 1 Pokémon with Medium-Slow growth rate](#experience-underflow-for-level-1-pok%C3%A9mon-with-medium-slow-growth-rate)
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
-  - [Heavy Ball uses wrong weight value for three Pokémon](#heavy-ball-uses-wrong-weight-value-for-three-pok%C3%A9mon)
   - [Catch rate formula breaks for Pokémon with max HP > 341](#catch-rate-formula-breaks-for-pok%C3%A9mon-with-max-hp--341)
   - [PRZ and BRN stat reductions don't apply to switched Pokémon](#prz-and-brn-stat-reductions-dont-apply-to-switched-pok%C3%A9mon)
   - [Glacier Badge may not boost Special Defense depending on the value of Special Attack](#glacier-badge-may-not-boost-special-defense-depending-on-the-value-of-special-attack)
@@ -1024,39 +1023,6 @@ This can occur if your party and current PC box are both full when you start the
  	cp MONS_PER_BOX
  	call CloseSRAM
  	jp z, Ball_BoxIsFullMessage
-```
-
-
-### Heavy Ball uses wrong weight value for three Pokémon
-
-`HeavyBall_GetDexEntryBank` gets the wrong bank for Kadabra (64), Tauros (128), and Sunflora (192).
-
-**Fix:** Edit `HeavyBall_GetDexEntryBank` in [engine/items/item_effects.asm](https://github.com/pret/pokecrystal/blob/master/engine/items/item_effects.asm):
-
-```diff
- HeavyBall_GetDexEntryBank:
--; BUG: Heavy Ball uses wrong weight value for three Pokemon (see docs/bugs_and_glitches.md)
- 	push hl
- 	push de
- 	ld a, [wEnemyMonSpecies]
-+	dec a
- 	rlca
- 	rlca
- 	maskbits NUM_DEX_ENTRY_BANKS
- 	ld hl, .PokedexEntryBanks
- 	ld d, 0
- 	ld e, a
- 	add hl, de
- 	ld a, [hl]
- 	pop de
- 	pop hl
- 	ret
-
- .PokedexEntryBanks:
- 	db BANK("Pokedex Entries 001-064")
- 	db BANK("Pokedex Entries 065-128")
- 	db BANK("Pokedex Entries 129-192")
- 	db BANK("Pokedex Entries 193-251")
 ```
 
 
