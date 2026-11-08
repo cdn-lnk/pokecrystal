@@ -42,7 +42,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Experience underflow for level 1 Pokémon with Medium-Slow growth rate](#experience-underflow-for-level-1-pok%C3%A9mon-with-medium-slow-growth-rate)
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
   - [Catch rate formula breaks for Pokémon with max HP > 341](#catch-rate-formula-breaks-for-pok%C3%A9mon-with-max-hp--341)
-  - ["Smart" AI encourages Mean Look if its own Pokémon is badly poisoned](#smart-ai-encourages-mean-look-if-its-own-pok%C3%A9mon-is-badly-poisoned)
   - ["Smart" AI does not encourage Solar Beam, Flame Wheel, or Moonlight during Sunny Day](#smart-ai-does-not-encourage-solar-beam-flame-wheel-or-moonlight-during-sunny-day)
   - ["Cautious" AI may fail to discourage residual moves](#cautious-ai-may-fail-to-discourage-residual-moves)
   - [AI does not discourage Nightmare if the player has any status condition](#ai-does-not-discourage-nightmare-if-the-player-has-any-status-condition)
@@ -1055,22 +1054,6 @@ HP values above 341 remain larger than 1 byte after division.
 	ld c, $1
 .okay_1
 	ld b, e
-```
-
-
-### "Smart" AI encourages Mean Look if its own Pokémon is badly poisoned
-
-([Video](https://www.youtube.com/watch?v=cygMO-zHTls))
-
-**Fix:** Edit `AI_Smart_MeanLook` in [engine/battle/ai/scoring.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle/ai/scoring.asm):
-
-```diff
- ; 80% chance to greatly encourage this move if the enemy is badly poisoned.
--; BUG: "Smart" AI encourages Mean Look if its own Pokémon is badly poisoned (see docs/bugs_and_glitches.md)
--	ld a, [wEnemySubStatus5]
-+	ld a, [wPlayerSubStatus5]
- 	bit SUBSTATUS_TOXIC, a
- 	jr nz, .asm_38e26
 ```
 
 
