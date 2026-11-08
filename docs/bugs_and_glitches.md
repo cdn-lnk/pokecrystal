@@ -42,7 +42,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Experience underflow for level 1 Pokémon with Medium-Slow growth rate](#experience-underflow-for-level-1-pok%C3%A9mon-with-medium-slow-growth-rate)
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
   - [Catch rate formula breaks for Pokémon with max HP > 341](#catch-rate-formula-breaks-for-pok%C3%A9mon-with-max-hp--341)
-  - [PRZ and BRN stat reductions don't apply to switched Pokémon](#prz-and-brn-stat-reductions-dont-apply-to-switched-pok%C3%A9mon)
   - [Glacier Badge may not boost Special Defense depending on the value of Special Attack](#glacier-badge-may-not-boost-special-defense-depending-on-the-value-of-special-attack)
   - ["Smart" AI encourages Mean Look if its own Pokémon is badly poisoned](#smart-ai-encourages-mean-look-if-its-own-pok%C3%A9mon-is-badly-poisoned)
   - ["Smart" AI discourages Conversion2 after the first turn](#smart-ai-discourages-conversion2-after-the-first-turn)
@@ -1058,24 +1057,6 @@ HP values above 341 remain larger than 1 byte after division.
 	ld c, $1
 .okay_1
 	ld b, e
-```
-
-
-### PRZ and BRN stat reductions don't apply to switched Pokémon
-
-This does not affect link battles or Battle Tower battles because those jump from `LoadEnemyMon` to `InitEnemyMon`, which already calls `ApplyStatusEffectOnEnemyStats`.
-
-**Fix:** Edit `LoadEnemyMon` in [engine/battle/core.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle/core.asm):
-
-```diff
- 	ld hl, wEnemyMonStats
- 	ld de, wEnemyStats
- 	ld bc, NUM_EXP_STATS * 2
- 	call CopyBytes
-
--; BUG: PRZ and BRN stat reductions don't apply to switched Pokémon (see docs/bugs_and_glitches.md)
-+	call ApplyStatusEffectOnEnemyStats
- 	ret
 ```
 
 
