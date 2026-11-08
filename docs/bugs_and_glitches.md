@@ -43,7 +43,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
   - [Catch rate formula breaks for Pokémon with max HP > 341](#catch-rate-formula-breaks-for-pok%C3%A9mon-with-max-hp--341)
   - ["Cautious" AI may fail to discourage residual moves](#cautious-ai-may-fail-to-discourage-residual-moves)
-  - [AI does not discourage Future Sight when it's already been used](#ai-does-not-discourage-future-sight-when-its-already-been-used)
   - [AI makes a false assumption about `CheckTypeMatchup`](#ai-makes-a-false-assumption-about-checktypematchup)
   - [AI use of Full Heal or Full Restore does not cure Nightmare status](#ai-use-of-full-heal-or-full-restore-does-not-cure-nightmare-status)
   - [AI use of Full Heal does not cure confusion status](#ai-use-of-full-heal-does-not-cure-confusion-status)
@@ -1078,21 +1077,6 @@ AI_Cautious:
 
 	inc [hl]
 	jr .loop
-```
-
-
-### AI does not discourage Future Sight when it's already been used
-
-**Fix:** Edit `AI_Redundant.FutureSight` in [engine/battle/ai/redundant.asm](https://github.com/pret/pokecrystal/blob/master/engine/battle/ai/redundant.asm):
-
-```diff
- .FutureSight:
--; BUG: AI does not discourage Future Sight when it's already been used (see docs/bugs_and_glitches.md)
--	ld a, [wEnemyScreens]
--	bit SCREENS_UNUSED, a
-+	ld a, [wEnemyFutureSightCount]
-+	and a
- 	ret
 ```
 
 
