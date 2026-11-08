@@ -52,7 +52,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
 - [Overworld engine](#overworld-engine)
   - [`LoadMetatiles` wraps around past 128 blocks](#loadmetatiles-wraps-around-past-128-blocks)
   - [Surfing directly across a map connection does not load the new map](#surfing-directly-across-a-map-connection-does-not-load-the-new-map)
-  - [Swimming NPCs aren't limited by their movement radius](#swimming-npcs-arent-limited-by-their-movement-radius)
   - [You can fish on top of NPCs](#you-can-fish-on-top-of-npcs)
   - [Pokémon deposited in the Day-Care might lose experience](#pok%C3%A9mon-deposited-in-the-day-care-might-lose-experience)
 - [Graphics](#graphics)
@@ -1356,21 +1355,6 @@ Then edit `SurfStartStep` in [engine/overworld/player_object.asm](https://github
 ```
 
 This fix will make the player enter the water at a normal walking speed, not with a slow step.
-
-
-### Swimming NPCs aren't limited by their movement radius
-
-This bug is why the Lapras in [maps/UnionCaveB2F.asm](https://github.com/pret/pokecrystal/blob/master/maps/UnionCaveB2F.asm), which uses `SPRITEMOVEDATA_SWIM_WANDER`, is not restricted by its `1, 1` movement radius.
-
-**Fix:** Edit `CanObjectMoveInDirection` in [engine/overworld/npc_movement.asm](https://github.com/pret/pokecrystal/blob/master/engine/overworld/npc_movement.asm):
-
-```diff
--; BUG: Swimming NPCs aren't limited by their movement radius (see docs/bugs_and_glitches.md)
- 	ld hl, OBJECT_FLAGS1
- 	add hl, bc
- 	bit NOCLIP_TILES_F, [hl]
-+	jr nz, .noclip_tiles
-```
 
 
 ### You can fish on top of NPCs
