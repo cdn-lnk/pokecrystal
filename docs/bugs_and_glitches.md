@@ -39,7 +39,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Moves that do damage and increase your stats do not increase stats after a KO](#moves-that-do-damage-and-increase-your-stats-do-not-increase-stats-after-a-ko)
 - [Single-player battle engine](#single-player-battle-engine)
   - [A Transformed Pokémon can use Sketch and learn otherwise unobtainable moves](#a-transformed-pok%C3%A9mon-can-use-sketch-and-learn-otherwise-unobtainable-moves)
-  - [Catching a Transformed Pokémon always catches a Ditto](#catching-a-transformed-pok%C3%A9mon-always-catches-a-ditto)
   - [Experience underflow for level 1 Pokémon with Medium-Slow growth rate](#experience-underflow-for-level-1-pok%C3%A9mon-with-medium-slow-growth-rate)
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
   - [Moon Ball does not boost catch rate](#moon-ball-does-not-boost-catch-rate)
@@ -965,47 +964,6 @@ This changes both calculations to *HP* × (100 / *N*) / (*max HP* / *N*) for the
  	call GetBattleVarAddr
  	bit SUBSTATUS_TRANSFORMED, [hl]
  	jp nz, .fail
-```
-
-
-### Catching a Transformed Pokémon always catches a Ditto
-
-**Fix:** Edit `PokeBallEffect` in [engine/items/item_effects.asm](https://github.com/pret/pokecrystal/blob/master/engine/items/item_effects.asm):
-
-```diff
- 	ld hl, wEnemySubStatus5
- 	ld a, [hl]
- 	push af
- 	set SUBSTATUS_TRANSFORMED, [hl]
-
--; BUG: Catching a Transformed Pokémon always catches a Ditto (see docs/bugs_and_glitches.md)
- 	bit SUBSTATUS_TRANSFORMED, a
--	jr nz, .ditto
--	jr .not_ditto
-+	jr nz, .load_data
-
--.ditto
--	ld a, DITTO
--	ld [wTempEnemyMonSpecies], a
--	jr .load_data
--
--.not_ditto
--	set SUBSTATUS_TRANSFORMED, [hl]
- 	ld hl, wEnemyBackupDVs
- 	ld a, [wEnemyMonDVs]
- 	ld [hli], a
- 	ld a, [wEnemyMonDVs + 1]
- 	ld [hl], a
-
- .load_data
- 	ld a, [wTempEnemyMonSpecies]
- 	ld [wCurPartySpecies], a
- 	ld a, [wEnemyMonLevel]
- 	ld [wCurPartyLevel], a
- 	farcall LoadEnemyMon
-
- 	pop af
- 	ld [wEnemySubStatus5], a
 ```
 
 
