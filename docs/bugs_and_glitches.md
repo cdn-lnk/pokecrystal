@@ -61,7 +61,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [AI might use its base reward value as an item](#ai-might-use-its-base-reward-value-as-an-item)
   - [Wild Pokémon can always Teleport regardless of level difference](#wild-pok%C3%A9mon-can-always-teleport-regardless-of-level-difference)
   - [`RIVAL2` has lower DVs than `RIVAL1`](#rival2-has-lower-dvs-than-rival1)
-  - [`HELD_CATCH_CHANCE` has no effect](#held_catch_chance-has-no-effect)
   - [Credits sequence changes move selection menu behavior](#credits-sequence-changes-move-selection-menu-behavior)
 - [Overworld engine](#overworld-engine)
   - [`LoadMetatiles` wraps around past 128 blocks](#loadmetatiles-wraps-around-past-128-blocks)
@@ -1488,29 +1487,6 @@ In the `AI_TryItem` routine, an item pointer is set to `wEnemyTrainerItem1` and 
 -; BUG: RIVAL2 has lower DVs than RIVAL1 (see docs/bugs_and_glitches.md)
 -	dn  9,  8,  8,  8 ; RIVAL2
 +	dn 13, 13, 13, 13 ; RIVAL2
-```
-
-
-### `HELD_CATCH_CHANCE` has no effect
-
-**Fix:** Edit `PokeBallEffect` in [engine/items/item_effects.asm](https://github.com/pret/pokecrystal/blob/master/engine/items/item_effects.asm):
-
-```diff
--; BUG: HELD_CATCH_CHANCE has no effect (see docs/bugs_and_glitches.md)
- 	ld d, a
- 	push de
- 	ld a, [wBattleMonItem]
-+	ld b, a
- 	farcall GetItemHeldEffect
- 	ld a, b
- 	cp HELD_CATCH_CHANCE
- 	pop de
- 	ld a, d
- 	jr nz, .max_2
- 	add c
- 	jr nc, .max_2
- 	ld a, $ff
- .max_2
 ```
 
 
