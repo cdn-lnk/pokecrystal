@@ -42,7 +42,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Experience underflow for level 1 Pokémon with Medium-Slow growth rate](#experience-underflow-for-level-1-pok%C3%A9mon-with-medium-slow-growth-rate)
   - [The Dude's catching tutorial may crash if his Poké Ball can't be used](#the-dudes-catching-tutorial-may-crash-if-his-pok%C3%A9-ball-cant-be-used)
   - [Catch rate formula breaks for Pokémon with max HP > 341](#catch-rate-formula-breaks-for-pok%C3%A9mon-with-max-hp--341)
-  - ["Smart" AI does not encourage Solar Beam, Flame Wheel, or Moonlight during Sunny Day](#smart-ai-does-not-encourage-solar-beam-flame-wheel-or-moonlight-during-sunny-day)
   - ["Cautious" AI may fail to discourage residual moves](#cautious-ai-may-fail-to-discourage-residual-moves)
   - [AI does not discourage Nightmare if the player has any status condition](#ai-does-not-discourage-nightmare-if-the-player-has-any-status-condition)
   - [AI does not discourage Future Sight when it's already been used](#ai-does-not-discourage-future-sight-when-its-already-been-used)
@@ -1054,28 +1053,6 @@ HP values above 341 remain larger than 1 byte after division.
 	ld c, $1
 .okay_1
 	ld b, e
-```
-
-
-### "Smart" AI does not encourage Sunny Day when it knows Solar Beam, Flame Wheel, or Moonlight
-
-**Fix:** Edit `SunnyDayMoves` in [data/battle/ai/sunny_day_moves.asm](https://github.com/pret/pokecrystal/blob/master/data/battle/ai/sunny_day_moves.asm):
-
-```diff
- SunnyDayMoves:
--; BUG: "Smart" AI does not encourage Sunny Day when it knows Solar Beam, Flame Wheel, or Moonlight (see docs/bugs_and_glitches.md)
- 	db FIRE_PUNCH
- 	db EMBER
- 	db FLAMETHROWER
-+	db SOLARBEAM
- 	db FIRE_SPIN
- 	db FIRE_BLAST
-+	db FLAME_WHEEL
- 	db SACRED_FIRE
- 	db MORNING_SUN
- 	db SYNTHESIS
-+	db MOONLIGHT
- 	db -1 ; end
 ```
 
 
