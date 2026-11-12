@@ -71,7 +71,6 @@ Fixes in the [multi-player battle engine](#multi-player-battle-engine) category 
   - [Playing Entei's Pokédex cry can distort Raikou's and Suicune's](#playing-enteis-pok%C3%A9dex-cry-can-distort-raikous-and-suicunes)
   - [`SFX_RUN` does not play correctly when a wild Pokémon flees from battle](#sfx_run-does-not-play-correctly-when-a-wild-pok%C3%A9mon-flees-from-battle)
 - [Text](#text)
-  - [Five-digit experience gain is printed incorrectly](#five-digit-experience-gain-is-printed-incorrectly)
   - [Only the first three evolution entries can have Stone compatibility reported correctly](#only-the-first-three-evolution-entries-can-have-stone-compatibility-reported-correctly)
   - [`EVOLVE_STAT` can break Stone compatibility reporting](#evolve_stat-can-break-stone-compatibility-reporting)
   - [A "HOF Master!" title for 200-Time Famers is defined but inaccessible](#a-hof-master-title-for-200-time-famers-is-defined-but-inaccessible)
@@ -1842,34 +1841,6 @@ The exact cause of this bug is unknown.
 
 
 ## Text
-
-
-### Five-digit experience gain is printed incorrectly
-
-([Video](https://www.youtube.com/watch?v=o54VjpAEoO8))
-
-**Fix:** Edit `_BoostedExpPointsText` and `_ExpPointsText` in [data/text/common_2.asm](https://github.com/pret/pokecrystal/blob/master/data/text/common_2.asm):
-
-```diff
- _BoostedExpPointsText::
--; BUG: Five-digit experience gain is printed incorrectly (see docs/bugs_and_glitches.md)
- 	text_start
- 	line "a boosted"
- 	cont "@"
--	text_decimal wStringBuffer2, 2, 4
-+	text_decimal wStringBuffer2, 2, 5
- 	text " EXP. Points!"
- 	prompt
-
- _ExpPointsText::
--; BUG: Five-digit experience gain is printed incorrectly (see docs/bugs_and_glitches.md)
- 	text_start
- 	line "@"
--	text_decimal wStringBuffer2, 2, 4
-+	text_decimal wStringBuffer2, 2, 5
- 	text " EXP. Points!"
- 	prompt
-```
 
 
 ### Only the first three evolution entries can have Stone compatibility reported correctly
